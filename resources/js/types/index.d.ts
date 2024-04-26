@@ -10,3 +10,15 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
 };
+
+
+export type Post = {
+    id: number,
+    uuid: string,
+    title: string,
+    description: string,
+    status: number,
+    image: string,
+    created_at: string,
+    updated_at: string,
+}
