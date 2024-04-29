@@ -14,7 +14,7 @@ Route::post('/post/store', [PostController::class, 'store_post'])->name('store_p
 Route::get('/post/view/{post:uuid}', [PostController::class, 'view_post'])->name('view_post');
 Route::get('/post/delete/{post:uuid}', [PostController::class, 'delete_post'])->name('delete_post');
 Route::get('/post/edit/{post:uuid}', [PostController::class, 'edit_post'])->name('edit_post');
-Route::put('/post/update/{post:uuid}', [PostController::class, 'update_post'])->name('update_post');
+Route::post('/post/update/{post:uuid}', [PostController::class, 'update_post'])->name('update_post');
 
 
 

@@ -10,7 +10,7 @@ interface Props {
 
 const ViewPost = ({ post }: Props) => {
 
-  const { id, uuid, title, description, status, image, created_at, updated_at } = post
+  const { id, uuid, title, description, status, image, } = post
 
 
   return (
@@ -36,7 +36,7 @@ const ViewPost = ({ post }: Props) => {
               <div className='flex flex-col md:flex-row gap-6 items-center'>
                 <div>
                   <a href="#" className="">
-                    <img src='/assets/crypto-3.jpg' className='max-h-80 object-cover w-auto rounded' alt="" />
+                    <img src={image} className='max-h-80 object-cover w-auto rounded' alt="" />
                   </a>
                 </div>
 

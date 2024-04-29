@@ -18,11 +18,18 @@ class PostController extends Controller
         $posts = Post::latest()
             ->get();
 
-        // dd($posts);
-
         //go to the view page
         return Inertia::render('PostPage', [
-            'posts' => $posts
+            'posts' => $posts->map(function ($post) {
+                return [
+                    "id" => $post->id,
+                    "uuid" => $post->uuid,
+                    "title" => $post->title,
+                    "description" => $post->description,
+                    "status" => $post->status,
+                    "image" => $post->image_url,
+                ];
+            }),
         ]);
     }
 
@@ -32,7 +39,14 @@ class PostController extends Controller
         // $post = Post::firstWhere('uuid', $id);
 
         return Inertia::render('ViewPost', [
-            'post' => $post
+            'post' => [
+                "id" => $post->id,
+                "uuid" => $post->uuid,
+                "title" => $post->title,
+                "description" => $post->description,
+                "status" => $post->status,
+                "image" => $post->image_url,
+            ]
         ]);
     }
 
@@ -55,7 +69,7 @@ class PostController extends Controller
 
         //declare file path name
         if ($request->hasFile('image')) {
-            $filename = 'post_image_' . date('ymd') . '.' . $request->file('image')->extension();
+            $filename = 'post_image_' . date('ymdhis') . '.' . $request->file('image')->extension();
             // dd($filename);
         }
 
@@ -93,23 +107,18 @@ class PostController extends Controller
         $post = Post::firstWhere('uuid', $id);
 
         return Inertia::render('EditPostPage', [
-            'post' => $post
+            'post' => [
+                "uuid" => $post->uuid,
+                "title" => $post->title,
+                "description" => $post->description,
+                "status" => $post->status,
+                "image" => $post->image_url,
+            ]
         ]);
     }
 
     public function update_post(Request $request, Post $post)
     {
-        // $imageName = '';
-        // if ($request->hasFile('file')) {
-        //     $imageName = time() . '.' . $request->file->extension();
-        //     $request->file->storeAs('public/images', $imageName);
-        //     if ($post->image) {
-        //         Storage::delete('public/images/' . $post->image);
-        //     }
-        // } else {
-        //     $imageName = $post->image;
-        // }
-
         $request->validate([
             'title' => 'required',
             'description' => 'required',
@@ -117,7 +126,23 @@ class PostController extends Controller
             'image' => 'nullable'
         ]);
 
-        $post->update($request->all());
+        $postData = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+        ];
+
+        if ($request->hasFile('image')) {
+            $imageName = 'post_image_' . date('ymdhis') . '.' . $request->image->extension();
+            
+            if ($post->image && Storage::exists($post->image)) {
+                Storage::delete('post_images' . $post->image);
+            } 
+
+            $postData['image'] = $request->image->storeAs('post_images', $imageName);
+        }
+
+        $post->update($postData);
         return redirect()->route('post')->with('success', 'Post updated successfully');
     }
 }

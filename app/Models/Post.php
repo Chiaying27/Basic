@@ -10,6 +10,17 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'uuid' , 'title', 'description', 'status', 'image',
+        'uuid', 'title', 'description', 'status', 'image',
     ];
+
+    // public function getAlternateColumnNameAttribute()
+    // {
+    //     // 
+    // }
+
+    //set this due to images is set in different path folder
+    public function getImageUrlAttribute()
+    {
+        return url('storage/' . $this->image);
+    }
 }

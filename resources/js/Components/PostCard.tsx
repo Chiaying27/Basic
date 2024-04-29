@@ -8,8 +8,7 @@ interface Props {
 
 const PostCard = ({ post }: Props) => {
 
-    const { id, uuid, title, description, status, image, created_at, updated_at } = post
-
+    const { id, uuid, title, description, status, image, } = post
 
     return (
         <div className='bg-white rounded-xl shadow-md relative'>
@@ -33,7 +32,7 @@ const PostCard = ({ post }: Props) => {
                     </div>
 
                     {/* Post Description */}
-                    <div className='text-gray-600 font-bold my-2'>
+                    <div className='text-gray-600 font-bold my-2 min-h-24'>
                         Post Description: 
                         <p className='line-clamp-3'>{description}</p>
                     </div>

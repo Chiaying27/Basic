@@ -12,6 +12,8 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 };
 
 
+//export type Post: This line declares a TypeScript type named Post and exports it, 
+//making it available for use in other modules
 export type Post = {
     id: number,
     uuid: string,
@@ -19,6 +21,7 @@ export type Post = {
     description: string,
     status: number,
     image: string,
-    created_at: string,
-    updated_at: string,
+    // image_url: string,
+    // created_at: string,
+    // updated_at: string,
 }

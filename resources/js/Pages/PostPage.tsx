@@ -8,7 +8,6 @@ import React from 'react'
 const PostPage = () => {
 
   const { posts } = usePage<{ posts: Post[] }>().props;
-  console.log(posts[0]);
 
   return (
     <section className='bg-indigo-50 min-h-screen'>

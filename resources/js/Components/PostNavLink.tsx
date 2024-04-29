@@ -6,7 +6,6 @@ const PostNavLink = () => {
 
     const { url, component } = usePage()
 
-    console.log(url);
     return (
         <nav className="flex flex-1 justify-end bg-indigo-700 px-4 py-4">
             <>

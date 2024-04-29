@@ -1,24 +1,55 @@
 import PostNavLink from '@/Components/PostNavLink'
 import { Post } from '@/types';
 import { Link, useForm, usePage } from '@inertiajs/react'
-import React, { FormEvent } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
+
 
 const EditPostPage = () => {
     const { post: post_object } = usePage<{ post: Post }>().props;
-    const { id, uuid, title, description, status, image, created_at, updated_at } = post_object;
-
+    const { uuid, title, description, status, image } = post_object;
+    const [previewImage, setPreviewImage] = useState<string>(image);
 
     //declare variable
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm<{
+        title: string,
+        description: string,
+        status: number,
+        image: null | File
+    }>({
         title,
         description,
         status,
-        image,
+        image: null,
     })
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { files } = e.target;
+        console.log(files);
+
+        // Check if a file is selected
+        if (files && files?.length > 0) {
+            // Read the file content
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                // Update the data state with the new image source
+                setPreviewImage(reader.result as string);
+            };
+            reader.readAsDataURL(files[0]); // Convert file to data URL
+            setData('image', files[0]);
+        } else {
+            // If no file is selected, reset the image to an empty string
+            // setData('image', '');
+            setPreviewImage('');
+        }
+    };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        put(`/post/update/${uuid}`)
+        post(route('update_post', uuid), {
+            onSuccess: () => {
+                alert('Succeed!');
+            }
+        })
     }
 
     return (
@@ -73,9 +104,13 @@ const EditPostPage = () => {
                     </div>
 
                     <div className="mb-4">
+                        <label htmlFor="image" className="block text-gray-700 font-medium text-sm">Image</label>
+                        <img src={previewImage}
+                            className='max-h-80 object-cover w-auto rounded mb-2'></img>
                         <label htmlFor="status" className="block text-gray-700 font-medium text-sm">
                             Upload Image
-                            <input type="file" onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)} name="image" className='flex' />
+                            {/* <input type="file" onChange={(e) => setData('image', (e.target.files && e.target.files.length > 0) ? e.target.files[0] : null)} name="image" className='flex' /> */}
+                            <input type="file" onChange={handleImageChange} name="image" className='flex' />
                         </label>
                     </div>
 

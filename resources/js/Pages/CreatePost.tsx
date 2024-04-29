@@ -1,9 +1,14 @@
 import PostNavLink from '@/Components/PostNavLink'
-import { useForm } from '@inertiajs/react'
+import { Post } from '@/types'
+import { useForm, usePage } from '@inertiajs/react'
 import { after } from 'node:test'
-import React, { FormEvent } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 
 const CreatePost = () => {
+
+  //set to empty string, because this is crerate post
+  const [previewImage, setPreviewImage] = useState<string>('');
+
 
   //declare variable
   const { data, setData, post, processing, errors } = useForm({
@@ -12,6 +17,28 @@ const CreatePost = () => {
     status: '1',
     image: null as File | null,
   })
+
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    console.log(files);
+
+    // Check if a file is selected
+    if (files && files?.length > 0) {
+      // Read the file content
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Update the data state with the new image source
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(files[0]); // Convert file to data URL
+      setData('image', files[0]);
+    } else {
+      // If no file is selected, reset the image to an empty string
+      // setData('image', '');
+      setPreviewImage('');
+    }
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -72,7 +99,11 @@ const CreatePost = () => {
           <div className="mb-4">
             <label htmlFor="status" className="block text-gray-700 font-medium text-sm">
               Upload Image
-              <input type="file" onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)} name="image" className='flex' />
+              <img src={previewImage}
+                className='max-h-80 object-cover w-auto rounded mb-2'></img>
+              {/* <input type="file" onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)} name="image" className='flex' /> */}
+              <input type="file" onChange={handleImageChange} name="image" className='flex' />
+
             </label>
           </div>
 
