@@ -11,8 +11,14 @@ const PostNavLink = () => {
             <>
                 <Link
                     href={route('post')}
-                    className={`${url.startsWith("/post") ? 'bg-indigo-300' : 'bg-red-300'} rounded-md px-4 py-2 mr-2 text-white transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white`}>
+                    className={`${url==="/post" ? 'bg-indigo-300' : 'bg-red-400'} rounded-md px-4 py-2 mr-2 text-white transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white`}>
                     Posts
+                </Link>
+
+                <Link
+                    href={route('create_post')}
+                    className={`${url.startsWith("/post/create") ? 'bg-indigo-300' : 'bg-red-400'} rounded-md px-4 py-2 mr-2 text-white transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white`}>
+                    Add Posts
                 </Link>
 
 
