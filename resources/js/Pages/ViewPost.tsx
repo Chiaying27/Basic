@@ -4,6 +4,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { Post } from '@/types';
 import PostDetails from '@/Components/PostDetails';
 import Spinner from '@/Components/Spinner';
+import Alert from '@/Components/Alert';
 
 interface Props {
   post: Post;
@@ -11,8 +12,11 @@ interface Props {
 
 const ViewPost = ({ post }: Props) => {
 
-  const { id, uuid, title, description, status, image, } = post
+  const { flash } = usePage<{ flash: any }>().props;
+
+  const { id, uuid, title, description, status, image, } = post;
   const [loading, setLoading] = useState(true);
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     setTimeout(() => {
@@ -20,8 +24,18 @@ const ViewPost = ({ post }: Props) => {
     }, 300)
   }, []);
 
+  useEffect(() => {
+    setAlertMessage(flash.message);
+    setTimeout(() => {
+      setAlertMessage('');
+    }, 2000)
+    console.log(flash);
+
+  }, [flash]);
+
   return (
     <section className='bg-indigo-50 min-h-screen'>
+      {alertMessage && <Alert message={alertMessage} />}
 
       <PostNavLink />
       {loading ? (

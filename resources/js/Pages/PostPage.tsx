@@ -1,3 +1,4 @@
+import Alert from '@/Components/Alert'
 import PostCard from '@/Components/PostCard'
 import PostNavLink from '@/Components/PostNavLink'
 import Spinner from '@/Components/Spinner'
@@ -9,10 +10,10 @@ import { FaSearch } from 'react-icons/fa'
 
 const PostPage = () => {
 
-  const { posts } = usePage<{ posts: Post[] }>().props;
+  const { posts, flash } = usePage<{ posts: Post[], flash: any }>().props;
   const [keyword, setKeyword] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const [alertMessage, setAlertMessage] = useState('');
 
   // Filter posts based on the keyword
   const filteredPosts = posts.filter(post =>
@@ -28,12 +29,19 @@ const PostPage = () => {
     }, 300)
   }, []);
 
+  useEffect(() => {
+    setAlertMessage(flash.message);
+    setTimeout(() => {
+      setAlertMessage('');
+    }, 2000)
+    console.log(flash);
+
+  }, [flash]);
 
   return (
     <section className='bg-indigo-50 min-h-screen'>
-
+      {alertMessage && <Alert message={alertMessage} />}
       <PostNavLink />
-
       <div className='container m-auto py-24 max-w-4xl space-y-4'>
         <div className="flex justify-between items-center">
           <h1 className='font-bold text-black-500'>This is a Post Page</h1>
@@ -59,7 +67,7 @@ const PostPage = () => {
 
         {loading ? (
           <Spinner loading={true} />
-        
+
         ) : (
 
           //Call the PostCard listed in array
@@ -74,7 +82,6 @@ const PostPage = () => {
         )}
 
       </div>
-
     </section >
   )
 

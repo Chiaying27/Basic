@@ -67,24 +67,25 @@ class PostController extends Controller
             'image' => 'nullable'
         ]);
 
-        //declare file path name
-        if ($request->hasFile('image')) {
-            $filename = 'post_image_' . date('ymdhis') . '.' . $request->file('image')->extension();
-            // dd($filename);
-        }
-
-        // Create the post using create() method
-        $posts = Post::create([
+        $data = [
             'uuid' => Str::uuid(),
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
-            'image' => $request->file('image')->storeAs('post_images', $filename),
+        ];
+        //declare file path name
+        if ($request->hasFile('image')) {
+            $filename = 'post_image_' . date('ymdhis') . '.' . $request->file('image')->extension();
+            $data['image'] = $request->file('image')->storeAs('post_images', $filename);
+        }
 
-        ]);
+        // Create the post using create() method
+        $posts = Post::create($data);
 
         if ($posts) {
-            return redirect()->route('post')->with('success', 'Post created successfully');
+            return redirect()->route('post')->with([
+                'message' => 'Post has been created'
+            ]);
         } else {
             return back()->with('error', 'Failed to create post');
         }
@@ -97,9 +98,15 @@ class PostController extends Controller
         // $posts = Post::find($id);
         $posts = Post::firstWhere('uuid', $id);
 
+         // Check if the post has an image
+        if ($posts->image && Storage::exists($posts->image)) {
+            Storage::delete($posts->image);
+        } 
+
         $posts->delete();
 
-        return redirect()->route('post')->with('success', 'Post deleted successfully');
+        return redirect()->route('post')->with(
+            ['message' => 'Post deleted successfully']);
     }
 
     public function edit_post($id)
@@ -143,6 +150,7 @@ class PostController extends Controller
         }
 
         $post->update($postData);
-        return redirect()->route('post')->with('success', 'Post updated successfully');
+        return redirect()->route('post')->with(
+            ['message' => 'Post updated successfully']);
     }
 }
