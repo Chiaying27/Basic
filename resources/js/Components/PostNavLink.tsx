@@ -14,7 +14,7 @@ const PostNavLink = () => {
 
     return (
         <nav className="flex justify-between items-center bg-indigo-700 p-4">
-            <Link className="flex flex-shrink-0 items-center mr-4" href="/">
+            <Link className="flex flex-shrink-0 items-center mr-4" href="/user-profile">
                 <img
                     className="h-12 w-auto"
                     src="/assets/logo.png"
